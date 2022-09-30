@@ -1,13 +1,12 @@
 var APP = {
 
 	Player: function () {
-
 		var renderer = new THREE.WebGLRenderer( { antialias: true } );
 		renderer.setPixelRatio( window.devicePixelRatio ); // TODO: Use player.setPixelRatio()
 		renderer.outputEncoding = THREE.sRGBEncoding;
 
 		var loader = new THREE.ObjectLoader();
-		var camera, scene;
+		var camera, scene, controls;
 
 		var vrButton = VRButton.createButton( renderer ); // eslint-disable-line no-undef
 
@@ -16,7 +15,10 @@ var APP = {
 		var dom = document.createElement( 'div' );
 		dom.appendChild( renderer.domElement );
 
+		//var controls = new OrbitControls( camera, renderer.domElement );
+
 		this.dom = dom;
+
 
 		this.width = 500;
 		this.height = 500;
@@ -34,6 +36,7 @@ var APP = {
 
 			this.setScene( loader.parse( json.scene ) );
 			this.setCamera( loader.parse( json.camera ) );
+			this.setControls();
 
 			events = {
 				init: [],
@@ -97,6 +100,8 @@ var APP = {
 
 			}
 
+
+
 			dispatch( events.init, arguments );
 
 		};
@@ -114,6 +119,10 @@ var APP = {
 			scene = value;
 
 		};
+
+		this.setControls = function(){
+			controls = new OrbitControls( camera, renderer.domElement );
+		}
 
 		this.setPixelRatio = function ( pixelRatio ) {
 
@@ -162,6 +171,8 @@ var APP = {
 				console.error( ( e.message || e ), ( e.stack || '' ) );
 
 			}
+
+			controls.update();
 
 			renderer.render( scene, camera );
 
