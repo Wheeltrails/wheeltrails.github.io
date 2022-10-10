@@ -36,7 +36,7 @@
 				const container = document.createElement( 'div' );
 				document.body.appendChild( container );
 
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 3000 );
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 8000 );
 
 				camera.position.set( 300, 300, -500 );
 				//camera.lookAt(100, 100, 0);
@@ -46,6 +46,7 @@
 
 
 				scene = new THREE.Scene();
+				//scene.background = new THREE.Color( 0xa0a0a0 );
 				scene.background = new THREE.Color( 0xa0a0a0 );
 		  	//scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
 
@@ -77,10 +78,24 @@
 				//scene.add( grid );
 
 				const loader = new FBXLoader();
-
-				const fbxToLoad = ['models/fbx/line_left.fbx', 'models/fbx/line_right.fbx',
-													 'models/fbx/2022-09-10T11_15_23Z_1_Line.fbx',
-												 	 'models/fbx/2022-09-10T11_15_23Z_0_Line.fbx'];
+				const textloader = new THREE.TextureLoader();
+				const fbxToLoad = [
+					//'models/fbx/line_left.fbx', 'models/fbx/line_right.fbx',
+								//					 'models/fbx/2022-09-10T11_15_23Z_1_Line.fbx',
+								//				 	 'models/fbx/2022-09-10T11_15_23Z_0_Line.fbx',
+													 //'models/fbx/2022-09-10T11_19_59Z_1_Mesh.fbx','models/fbx/2022-09-10T11_19_59Z_0_Mesh.fbx',
+								//					 'models/fbx/2022-09-10T11_46_20Z_1_Line.fbx', 'models/fbx/2022-09-10T11_46_20Z_0_Line.fbx',
+												//	 'models/fbx/2022-09-10T13_12_06Z_1_Mesh.fbx', 'models/fbx/2022-09-10T13_12_06Z_0_Mesh.fbx',
+													 //'models/fbx/2022-09-10T13_33_56Z_1_Line.fbx', 'models/fbx/2022-09-10T13_33_56Z_0_Line.fbx'
+													 'models/fbx/small/s11.fbx',
+													 'models/fbx/small/s2.fbx',
+													 'models/fbx/small/s3.fbx',
+'models/fbx/small/s4.fbx',
+'models/fbx/small/s5.fbx',
+'models/fbx/small/s66.fbx',
+'models/fbx/small/s7.fbx',
+'models/fbx/small/s8.fbx'
+												 ];
 
 				fbxToLoad.forEach(fbxFile => {
 					loader.load( fbxFile, function ( object ) {
@@ -88,8 +103,10 @@
 							if ( child.isMesh ) {
 								child.castShadow = true;
 								child.receiveShadow = true;
+								child.geometry.computeVertexNormals();
 							}
 							if( child.material ) {
+								child.material.map = loader.load('resources/images/wall.jpg');
 								child.material.side = THREE.DoubleSide;
 							}
 						} );
