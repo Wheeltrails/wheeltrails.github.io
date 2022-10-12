@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Wheeltrails / all trails</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="main.css">
+	</head>
+
+	<body>
+		<!-- Import maps polyfill -->
+		<!-- Remove this when import maps will be widely supported -->
+		<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "/build/three.module.js",
+					"three/addons/": "./jsm/"
+				}
+			}
+		</script>
+
+		<script type="module">
+
+			import * as THREE from 'three';
+			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+			import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+
+			let camera, scene, renderer;
+
+			init();
+			animate();
+
+			function init() {
+				const container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+
+				camera.position.set( 300, 300, -500 );
+				//camera.lookAt(100, 100, 0);
+				camera.updateProjectionMatrix();
+
+				scene = new THREE.Scene();
+				//scene.background = new THREE.Color( 0xa0a0a0 );
+				scene.background = new THREE.Color( 0xa0a0a0 );
+		  	//scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
+
+				const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+				hemiLight.position.set( 0, 200, 0 );
+				scene.add( hemiLight );
+
+				const dirLight = new THREE.DirectionalLight( 0xffffff );
+				dirLight.position.set( 0, 200, 100 );
+				dirLight.castShadow = true;
+				dirLight.shadow.camera.top = 180;
+				dirLight.shadow.camera.bottom = - 100;
+				dirLight.shadow.camera.left = - 120;
+				dirLight.shadow.camera.right = 120;
+				scene.add( dirLight );
+
+				const loader = new FBXLoader();
+				const textloader = new THREE.TextureLoader();
+				const fbxToLoad = [
+					  'models/fbx/small/s5.fbx',
+												 ];
+			const texturesToLoad = [
+			'/textures/2022-09-10T13_33_56Z/ribbonStaticText.png',
+			'/textures/2022-09-10T11_46_20Z/ribbonStaticText.png',
+			'/textures/2022-09-10T16_41_20Z/ribbonStaticText.png',
+			'/textures/2022-09-10T10_29_08Z/ribbonStaticText.png',
+	 		'/textures/2022-09-10T11_19_59Z/ribbonStaticText.png',
+	 		'/textures/2022-09-10T13_12_06Z/ribbonStaticText.png',
+	 		'/textures/2022-09-10T15_31_16Z/ribbonStaticText.png',
+			'/textures/2022-09-10T15_56_09Z/ribbonStaticText.png',
+			];
+				var idx=0;
+				fbxToLoad.forEach(fbxFile => {
+					loader.load( fbxFile, function ( object ) {
+						object.traverse( function ( child ) {
+							if ( child.isMesh ) {
+							//	child.castShadow = true;
+							//	child.receiveShadow = true;
+								child.geometry.computeVertexNormals();
+							}
+							if( child.material ) {
+									child.color = 0xffffff;
+									child.material.map = textloader.load(texturesToLoad[idx], function(texture){
+									texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+	 								texture.offset.set( 0, 0 );
+									texture.flipY = -1;
+									texture.repeat.x = - 1;
+	 								//texture.repeat.set( 2, 2 );
+								});
+								 child.material.alphaTest = 0.0;
+								 idx++;
+
+/*
+Properties70:  {
+			P: "CurrentTextureBlendMode", "enum", "", "",0
+			P: "UVSet", "KString", "", "", "map1"
+			P: "UseMaterial", "bool", "", "",1
+		}
+		Media: "Video::Universal Render Pipeline/Unlit"
+		FileName: "/var/mobile/Containers/Data/Application/859FCC99-E24C-46FC-BFFE-D6FD3CDDA759/Documents/2022-09-10T14_41_34Z/Textures/ribbonStaticText1855821967.png"
+		RelativeFilename: "/Textures/ribbonStaticText1855821967.png"
+		ModelUVTranslation: 0,0
+		ModelUVScaling: 1,1
+		Texture_Alpha_Source: "None"
+		Cropping: 0,0,0,0
+*/
+
+
+								child.material.side = THREE.DoubleSide;
+							}
+						} );
+						scene.add( object );
+						object.scale.multiplyScalar(100);
+					} );
+				});
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.shadowMap.enabled = true;
+				container.appendChild( renderer.domElement );
+
+				const controls = new OrbitControls( camera, renderer.domElement );
+				controls.target.set( 250, -100, 500 );
+				controls.update();
+
+				window.addEventListener( 'resize', onWindowResize );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function animate() {
+				requestAnimationFrame( animate );
+				renderer.render( scene, camera );
+			}
+
+		</script>
+
+	</body>
+</html>
