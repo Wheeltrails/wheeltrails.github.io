@@ -63,14 +63,14 @@
 				const loader = new FBXLoader();
 				const textloader = new THREE.TextureLoader();
 				const fbxToLoad = [
-					  'models/fbx/small/s11.fbx',
-					  'models/fbx/small/s2.fbx',
-					  'models/fbx/small/s3.fbx',
-					  'models/fbx/small/s4.fbx',
-					  'models/fbx/small/s5.fbx',
-					  'models/fbx/small/s6.fbx',
-					  'models/fbx/small/s7.fbx',
-					 	'models/fbx/small/s8.fbx'
+					   // 'models/fbx/small/s11.fbx',
+					   // 'models/fbx/small/s2.fbx',
+					   // 'models/fbx/small/s3.fbx',
+					   // 'models/fbx/small/s4.fbx',
+					    'models/fbx/small/s5.fbx',
+					  //  'models/fbx/small/s6.fbx',
+					  //  'models/fbx/small/s7.fbx',
+					 	// 'models/fbx/small/s8.fbx'
 			];
 			const texturesToLoad = [
 			'/textures/2022-09-10T13_33_56Z/ribbonStaticText.png',
@@ -92,13 +92,14 @@
 								child.geometry.computeVertexNormals();
 							}
 							if( child.material ) {
-									child.color = 0xffffff;
-									child.material.map = textloader.load(texturesToLoad[idx], function(texture){
-									texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-	 								texture.offset.set( 0, 0 );
-									texture.flipY = -1;
-									texture.repeat.x = - 1;
-								});
+									child.color = 0x000000;
+								//	child.material.map = textloader.load(texturesToLoad[idx], function(texture){
+								//	texture.wrapS = THREE.RepeatWrapping;
+								//	texture.wrapT = THREE.RepeatWrapping;
+	 							//	texture.offset.set( 0, 0 );
+								//	texture.flipY = -1;
+								//	texture.repeat.x = -1;
+							//	});
 								 //child.material.alphaTest = 0.0;
 								 idx++;
 
