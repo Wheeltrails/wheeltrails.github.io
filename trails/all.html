@@ -93,13 +93,13 @@
 							}
 							if( child.material ) {
 									child.color = 0x000000;
-								//	child.material.map = textloader.load(texturesToLoad[idx], function(texture){
-								//	texture.wrapS = THREE.RepeatWrapping;
-								//	texture.wrapT = THREE.RepeatWrapping;
-	 							//	texture.offset.set( 0, 0 );
-								//	texture.flipY = -1;
-								//	texture.repeat.x = -1;
-							//	});
+									child.material.map = textloader.load(texturesToLoad[idx], function(texture){
+									texture.wrapS = THREE.RepeatWrapping;
+									texture.wrapT = THREE.RepeatWrapping;
+	 								texture.offset.set( 0, 0 );
+									texture.flipY = -1;
+									texture.repeat.x = -1;
+								});
 								 //child.material.alphaTest = 0.0;
 								 idx++;
 
