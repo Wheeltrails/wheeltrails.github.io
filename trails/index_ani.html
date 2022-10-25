@@ -155,9 +155,9 @@
 				//pos.x += (1000.0+time*(0.0125*pos.y));
 				//pos.y += (time*0.0125);
 
-				pos.x += (time * 0.0125 * pos.y) ;
-				pos.x += time*0.0125;
-				pos.y += time*0.001;
+				pos.x += sin(time * 0.0125 * pos.y) ;
+				pos.x += (time*0.0125);
+				pos.y += (time*0.001);
 
 			  float f = iqnoise(amount * pos.xy, jitter, blur );
 				if (f < 0.65) discard;
@@ -165,7 +165,7 @@
 				//vec4 color =
 				//color.a = f;
 
-			vec3 c = texture2D(tex, pos.xy*10.0).rgb;
+			vec3 c = texture2D(tex, vUv.xy*100.0).rgb;
 
 			//	gl_FragColor = c;
 			gl_FragColor = vec4(c.r, c.g, c.b,f);
