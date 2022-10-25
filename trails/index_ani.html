@@ -42,6 +42,7 @@
 			animate();
 
 			function init() {
+				const textloader = new THREE.TextureLoader();
 
 				uniforms = {
 						 colorB: {type: 'vec3', value: new THREE.Color(0xACB6E5)},
@@ -49,7 +50,9 @@
 						 time: { type: 'f', value: 1000 },
 						  blur: { type: 'f', value: 0.5 },
 							 jitter: { type: 'f', value: 2.6 },
-							  amount: { type: 'f', value: 5.0 }
+							  amount: { type: 'f', value: 5.0 },
+								tex: { type: "t", value: textloader.load("/trails/icon.png") }
+
 				 }
 
 				const container = document.createElement( 'div' );
@@ -79,6 +82,7 @@
 
 				const loader = new FBXLoader();
 
+
 				const fbxToLoad = ['models/fbx/2022-09-10T11_19_59Z_0_Mesh.fbx',
 													 'models/fbx/2022-09-10T11_19_59Z_1_Mesh.fbx'];
 
@@ -99,12 +103,14 @@
       uniform vec3 colorA;
       uniform vec3 colorB;
 			uniform float time;
+			uniform sampler2D tex;
 
 			varying vec3 vUv;
 			varying vec2 vUu;
 			uniform float amount;
 			uniform float jitter;
 			uniform float blur;
+
 			vec3 hash3( vec2 p )
 			{
 			    vec3 q = vec3( dot(p,vec2(127.1,311.7)),
@@ -148,13 +154,21 @@
 				vec3 pos = vUv;
 				//pos.x += (1000.0+time*(0.0125*pos.y));
 				//pos.y += (time*0.0125);
+
 				pos.x += (time * 0.0125 * pos.y) ;
 				pos.x += time*0.0125;
+				pos.y += time*0.001;
 
-			  float f = iqnoise( amount*pos.xy, jitter, blur );
-
+			  float f = iqnoise(amount * pos.xy, jitter, blur );
 				if (f < 0.65) discard;
-			  gl_FragColor = vec4(1.0,1.0,1.0,f);
+
+				//vec4 color =
+				//color.a = f;
+
+			vec3 c = texture2D(tex, pos.xy*10.0).rgb;
+
+			//	gl_FragColor = c;
+			gl_FragColor = vec4(c.r, c.g, c.b,f);
 			}
 
   `,
@@ -198,6 +212,16 @@
 								 // child.material.alphaTest = 0.3;
 								 // child.material.alphaToCoverage  = 0.3;
 							  child.material.side = THREE.DoubleSide;
+
+							// 	child.material.map = textloader.load('/trails/icon.png', function(texture){
+							// 	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+							// 	texture.offset.set( 0, 0 );
+							// 	texture.flipY = -1;
+							// 	texture.repeat.x = - 1;
+							// 	//texture.repeat.set( 2, 2 );
+							// });
+
+
 							}
 						} );
 						scene.add( object );
